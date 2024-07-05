@@ -1,41 +1,19 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App(): JSX.Element {
-  const [count, setCount] = useState(0);
+  const [taskResult, setTaskResult] = useState("Performing heavy task...");
+
+  useEffect(() => {
+    window.electron.invoke("perform-heavy-task").then((result) => {
+      setTaskResult(result);
+    });
+  }, []);
 
   return (
-    <>
-      <div>
-        <a
-          href="https://electron-vite.github.io"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <img
-            alt="Vite logo"
-            className="logo"
-            src="/electron-vite.animate.svg"
-          />
-        </a>
-        <a href="https://react.dev" rel="noreferrer" target="_blank">
-          <img alt="React logo" className="logo react" src={reactLogo} />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <h1>{taskResult}</h1>
+    </div>
   );
 }
 

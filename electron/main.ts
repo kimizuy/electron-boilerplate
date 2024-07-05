@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { app, BrowserWindow } from "electron";
+import { ipcMain } from "@/utils/ipc-main";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -34,11 +35,6 @@ function createWindow(): void {
     },
   });
 
-  // Test active push message to Renderer-process.
-  win.webContents.on("did-finish-load", () => {
-    win?.webContents.send("main-process-message", new Date().toLocaleString());
-  });
-
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
@@ -66,3 +62,16 @@ app.on("activate", () => {
 });
 
 app.whenReady().then(createWindow);
+
+ipcMain.handle("perform-heavy-task", async () => {
+  const result = await performHeavyTask();
+  return result;
+});
+
+async function performHeavyTask(): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("Heavy task completed");
+    }, 5000); // 例: 5秒かかる重たい処理
+  });
+}
