@@ -67,7 +67,7 @@ module.exports = {
     ],
     "object-shorthand": "warn",
     "@typescript-eslint/explicit-function-return-type": "error",
-    "no-console": ["error", { allow: ["info", "error"] }],
+    "no-console": ["error", { allow: ["info", "error", "warn"] }],
   },
   overrides: [
     {
