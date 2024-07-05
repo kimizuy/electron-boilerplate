@@ -1,31 +1,55 @@
 import { ipcRenderer, contextBridge } from "electron";
 
+const allowedChannels = ["main-process-message"] as const;
+
+type AllowedChannel = (typeof allowedChannels)[number];
+
 const electronApi = {
   on(
-    ...args: Parameters<typeof ipcRenderer.on>
-  ): ReturnType<typeof ipcRenderer.on> {
-    const [channel, listener] = args;
-    return ipcRenderer.on(channel, (event, ...args) =>
-      listener(event, ...args),
-    );
+    channel: AllowedChannel,
+    listener: Parameters<typeof ipcRenderer.on>[1],
+  ): void {
+    if (allowedChannels.includes(channel)) {
+      ipcRenderer.on(channel, listener);
+    } else {
+      console.warn(`Channel ${channel} is not allowed`);
+    }
   },
   off(
-    ...args: Parameters<typeof ipcRenderer.off>
-  ): ReturnType<typeof ipcRenderer.off> {
-    const [channel, ...omit] = args;
-    return ipcRenderer.off(channel, ...omit);
+    channel: AllowedChannel,
+    listener: Parameters<typeof ipcRenderer.off>[1],
+  ): void {
+    if (allowedChannels.includes(channel)) {
+      ipcRenderer.off(channel, listener);
+    } else {
+      console.warn(`Channel ${channel} is not allowed`);
+    }
   },
   send(
-    ...args: Parameters<typeof ipcRenderer.send>
-  ): ReturnType<typeof ipcRenderer.send> {
-    const [channel, ...omit] = args;
-    return ipcRenderer.send(channel, ...omit);
+    channel: AllowedChannel,
+    ...args: Parameters<typeof ipcRenderer.send>[1]
+  ): void {
+    if (allowedChannels.includes(channel)) {
+      ipcRenderer.send(channel, ...args);
+    } else {
+      console.warn(`Channel ${channel} is not allowed`);
+    }
   },
-  invoke(
-    ...args: Parameters<typeof ipcRenderer.invoke>
+  async invoke(
+    channel: AllowedChannel,
+    ...args: Parameters<typeof ipcRenderer.invoke>[1]
   ): ReturnType<typeof ipcRenderer.invoke> {
-    const [channel, ...omit] = args;
-    return ipcRenderer.invoke(channel, ...omit);
+    if (allowedChannels.includes(channel)) {
+      try {
+        return await ipcRenderer.invoke(channel, ...args);
+      } catch (error) {
+        console.error(`Error invoking channel ${channel}:`, error);
+        throw error;
+      }
+    } else {
+      console.warn(`Channel ${channel} is not allowed`);
+      return Promise.reject(`Channel ${channel} is not allowed`);
+    }
   },
 };
 
