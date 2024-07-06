@@ -10,6 +10,7 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:import-x/recommended",
     "plugin:import-x/typescript",
+    "plugin:eslint-comments/recommended",
   ],
   settings: {
     "import-x/resolver": {
@@ -26,7 +27,7 @@ module.exports = {
     project: ["./tsconfig.json", "./tsconfig.node.json"],
     tsconfigRootDir: __dirname,
   },
-  plugins: ["react-refresh"],
+  plugins: ["react-refresh", "eslint-comments"],
   rules: {
     "react-refresh/only-export-components": [
       "warn",
@@ -59,6 +60,7 @@ module.exports = {
     "import-x/no-unresolved": "error",
     "import-x/no-default-export": "error",
     "import-x/order": "error",
+    "import-x/no-named-as-default": "off",
     "react/jsx-sort-props": [
       "error",
       {
@@ -68,6 +70,7 @@ module.exports = {
     "object-shorthand": "warn",
     "@typescript-eslint/explicit-function-return-type": "error",
     "no-console": ["error", { allow: ["info", "error", "warn"] }],
+    "eslint-comments/require-description": "error",
   },
   overrides: [
     {
