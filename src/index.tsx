@@ -8,9 +8,3 @@ createRoot(document.getElementById("root")!).render(
     <App />
   </StrictMode>,
 );
-
-// Use contextBridge
-window.electron.on("main-process-message", (_event, message) => {
-  // eslint-disable-next-line no-console
-  console.log(message);
-});

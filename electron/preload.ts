@@ -1,6 +1,6 @@
 import { ipcRenderer, contextBridge } from "electron";
 
-const allowedChannels = ["main-process-message", "perform-heavy-task"] as const;
+const allowedChannels = ["perform-heavy-task"] as const;
 
 export type AllowedChannel = (typeof allowedChannels)[number];
 
