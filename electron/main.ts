@@ -1,7 +1,7 @@
-import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { app, BrowserWindow } from "electron";
 import { ipcMain } from "@/utils/ipc-main";
+import { getUsers } from "@/utils/db";
 
 const __dirname = import.meta.dirname;
 
@@ -61,7 +61,10 @@ app.on("activate", () => {
   }
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  getUsers();
+});
 
 ipcMain.handle("perform-heavy-task", async () => {
   const result = await performHeavyTask();
