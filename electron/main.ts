@@ -3,7 +3,7 @@ import path from "node:path";
 import { app, BrowserWindow } from "electron";
 import { ipcMain } from "@/utils/ipc-main";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = import.meta.dirname;
 
 // The built directory structure
 //
