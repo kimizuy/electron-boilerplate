@@ -24,7 +24,12 @@ export default defineConfig((env) => {
         external,
       },
     },
-    plugins: [pluginHotRestart("restart"), native({ webpack: {} })],
+
+    plugins: [
+      pluginHotRestart("restart"),
+      // Load C/C++ native modules. Like sqlite3, better-sqlite3, fsevents etc.
+      native({ webpack: {} }),
+    ],
     define,
     resolve: {
       // Load the Node.js entry.
