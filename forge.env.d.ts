@@ -1,3 +1,5 @@
+import { type VitePlugin } from "@electron-forge/plugin-vite";
+
 export {}; // Make this a module
 
 declare global {
@@ -10,11 +12,12 @@ declare global {
   namespace NodeJS {
     interface Process {
       // Used for hot reload after preload scripts.
-      viteDevServers: Record<string, import('vite').ViteDevServer>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Define runtime keys.
+      viteDevServers: Record<string, any>;
     }
   }
 
-  type VitePluginConfig = ConstructorParameters<typeof import('@electron-forge/plugin-vite').VitePlugin>[0];
+  type VitePluginConfig = ConstructorParameters<typeof VitePlugin>[0];
 
   interface VitePluginRuntimeKeys {
     VITE_DEV_SERVER_URL: `${string}_VITE_DEV_SERVER_URL`;
@@ -22,8 +25,10 @@ declare global {
   }
 }
 
-declare module 'vite' {
-  interface ConfigEnv<K extends keyof VitePluginConfig = keyof VitePluginConfig> {
+declare module "vite" {
+  interface ConfigEnv<
+    K extends keyof VitePluginConfig = keyof VitePluginConfig,
+  > {
     root: string;
     forgeConfig: VitePluginConfig;
     forgeConfigSelf: VitePluginConfig[K][number];

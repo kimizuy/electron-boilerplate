@@ -1,13 +1,15 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
-import better_sqlite3 from "better-sqlite3";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import { ipcMainListeners } from "./ipc-main-listeners";
+import { db } from "./utils/db";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
-const createWindow = () => {
+const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
@@ -19,25 +21,41 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+    void mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(
-      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
+    void mainWindow.loadFile(
+      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
     );
   }
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-
-  mainWindow.webContents.send("load-native-addons", {
-    better_sqlite3: Object.getOwnPropertyNames(better_sqlite3),
-  });
+  // Open the DevTools when in development mode.
+  if (process.env.NODE_ENV === "development") {
+    mainWindow.webContents.openDevTools();
+  }
 };
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+void app.whenReady().then(() => {
+  const migrationsFolder =
+    process.env.NODE_ENV === "development"
+      ? "drizzle"
+      : path.join(process.resourcesPath, "drizzle");
+  migrate(db, { migrationsFolder });
+
+  createWindow();
+
+  // ipcMain.handle()のハンドラ関数を登録する
+  Object.entries(ipcMainListeners).forEach(([channel, listener]) => {
+    ipcMain.handle(channel, listener);
+  });
+
+  app.on("activate", () => {
+    // On OS X it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -45,14 +63,6 @@ app.on("ready", createWindow);
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
-  }
-});
-
-app.on("activate", () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
   }
 });
 
