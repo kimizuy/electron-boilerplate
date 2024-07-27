@@ -43,7 +43,7 @@ void app.whenReady().then(() => {
 
   createWindow();
 
-  // ipcMain.handle()のハンドラ関数を登録する
+  // Register IPC main listeners
   Object.entries(ipcMainListeners).forEach(([channel, listener]) => {
     ipcMain.handle(channel, listener);
   });

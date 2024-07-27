@@ -3,7 +3,7 @@ import { type ipcMainListeners } from "./ipc-main-listeners";
 
 type AllowedChannel = keyof typeof ipcMainListeners;
 
-// セキュリティ対策でipcRendererの一部のAPIだけをラップして公開する
+// Publish a part of ipcRenderer API to the renderer process
 // ref: https://github.com/electron-vite/electron-vite-react/blob/f3e8e2cf6892b5d15eb974d1c3a8218f5f0d501b/electron/preload/index.ts#L3
 const api = {
   invoke<K extends AllowedChannel>(
@@ -32,7 +32,6 @@ const api = {
   },
 };
 
-// ipcRendererの一部のAPIを使っているので、そのまま"ipcRenderer"という名前でwindowオブジェクトに公開する
 contextBridge.exposeInMainWorld("ipcRenderer", api);
 
 declare global {

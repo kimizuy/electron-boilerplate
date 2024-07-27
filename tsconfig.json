@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    // 基本
+    // General
     "target": "ESNext",
     "module": "CommonJS",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
 
-    // モジュール解決
+    // Module Resolution
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
@@ -15,7 +15,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
 
-    // 型チェック
+    // Strict Type-Checking Options
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -26,12 +26,12 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
 
-    // 出力
+    // Output
     "outDir": "dist",
     "sourceMap": true,
     "noEmit": true,
 
-    // その他
+    // Others
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true

@@ -6,7 +6,7 @@ import { About } from "./about";
 import { Layout } from "./layout";
 import "../styles/global.css";
 
-// クライアントだけで動作するアプリケーションのため`createHashRouter`を使用する
+// Since this is a client-only application, use `createHashRouter
 const router = createHashRouter([
   {
     path: "/",

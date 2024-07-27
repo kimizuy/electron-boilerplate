@@ -19,7 +19,7 @@ if (isDev && !existsSync(dbDirectory)) {
 // eslint-disable-next-line no-console -- for debug
 export const betterSqlite3 = new Database(dbPath, { verbose: console.log });
 
-// パフォーマンス向上のためWALモードを有効にする
+// Enable Write-Ahead Logging (WAL) mode for better performance
 // ref: https://github.com/WiseLibs/better-sqlite3/blob/master/docs/performance.md
 betterSqlite3.pragma("journal_mode = WAL");
 
