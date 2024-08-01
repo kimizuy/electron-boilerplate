@@ -1,6 +1,6 @@
+import { users } from "../schema";
+import { db } from "../utils/db";
 import { type IpcMainListener } from ".";
-import { users } from "@/schema";
-import { db } from "@/utils/db";
 
 export const getNames: IpcMainListener = (): (string | null)[] => {
   db.insert(users)

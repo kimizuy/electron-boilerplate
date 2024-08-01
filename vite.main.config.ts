@@ -1,4 +1,3 @@
-import path from "path";
 import type { ConfigEnv, UserConfig } from "vite";
 import { defineConfig, mergeConfig } from "vite";
 import native from "vite-plugin-native";
@@ -35,9 +34,6 @@ export default defineConfig((env) => {
     resolve: {
       // Load the Node.js entry.
       mainFields: ["module", "jsnext:main", "jsnext"],
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
     },
   };
 
