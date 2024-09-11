@@ -29,7 +29,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "drizzle-kit": "^0.23.0",
     "drizzle-orm": "^0.32.0",
-    "electron": "^31.2.0",
+    "electron": "32.1.0",
     "eslint": "^8.0.1",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-eslint-comments": "^3.2.0",
@@ -46,7 +46,7 @@
     "vite": "^5.0.12"
   },
   "dependencies": {
-    "better-sqlite3": "^11.1.2",
+    "better-sqlite3": "11.3.0",
     "electron-squirrel-startup": "^1.0.1",
     "vite-plugin-native": "^2.2.1"
   },
