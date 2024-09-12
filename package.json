@@ -1,6 +1,7 @@
 {
   "name": "electron-boilerplate",
   "productName": "electron-boilerplate",
+  "author": "Jane Doe",
   "version": "1.0.0",
   "description": "Electron boilerplate with Vite, React, better-sqlite3, and Drizzle",
   "main": ".vite/build/main.js",
