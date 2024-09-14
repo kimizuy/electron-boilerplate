@@ -16,8 +16,7 @@ if (isDev && !existsSync(dbDirectory)) {
   mkdirSync(dbDirectory, { recursive: true });
 }
 
-// eslint-disable-next-line no-console -- for debug
-export const betterSqlite3 = new Database(dbPath, { verbose: console.log });
+const betterSqlite3 = new Database(dbPath, { verbose: console.info });
 
 // Enable Write-Ahead Logging (WAL) mode for better performance
 // ref: https://github.com/WiseLibs/better-sqlite3/blob/master/docs/performance.md
