@@ -51,6 +51,9 @@
     "electron-squirrel-startup": "^1.0.1",
     "vite-plugin-native": "^2.2.1"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-win32-x64-msvc": "^4.21.3"
+  },
   "engines": {
     "node": "20.x"
   },
