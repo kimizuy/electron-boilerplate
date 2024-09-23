@@ -1,13 +1,19 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-import { ipcMainListeners } from "./ipc-main-listeners";
+import { Hono } from "hono";
+import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
 import { db } from "./utils/db";
+import { ipcMainListeners } from "./ipc-main-listeners";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   app.quit();
 }
+
+const hono = new Hono();
+const port = 3000;
 
 const createWindow = (): void => {
   // Create the browser window.
@@ -19,13 +25,13 @@ const createWindow = (): void => {
     },
   });
 
-  // and load the index.html of the app.
+  // Load the app
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     void mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    void mainWindow.loadFile(
-      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
-    );
+    // In production, use Hono server
+    const startURL = `http://localhost:${port}`;
+    void mainWindow.loadURL(startURL);
   }
 
   // Open the DevTools when in development mode.
@@ -41,7 +47,27 @@ void app.whenReady().then(() => {
       : path.join(process.resourcesPath, "drizzle");
   migrate(db, { migrationsFolder });
 
-  createWindow();
+  if (!MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    // Set up Hono server for production
+    const distPath = path.join(
+      __dirname,
+      `../renderer/${MAIN_WINDOW_VITE_NAME}`,
+    );
+
+    // Serve static files
+    hono.use("/*", serveStatic({ root: distPath }));
+
+    // Start the server
+    serve(
+      {
+        fetch: hono.fetch,
+        port,
+      },
+      createWindow,
+    );
+  } else {
+    createWindow();
+  }
 
   // Register IPC main listeners
   Object.entries(ipcMainListeners).forEach(([channel, listener]) => {

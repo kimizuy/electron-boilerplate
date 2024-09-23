@@ -35,6 +35,7 @@ export function Home(): JSX.Element {
 
   return (
     <div>
+      <img alt="logo" src="vite.svg" />
       <h1>Hello, world!</h1>
       <div>
         <a href="#about">Go to about page</a>
