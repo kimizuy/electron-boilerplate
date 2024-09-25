@@ -12,11 +12,11 @@ type IsOptional<T> = undefined extends T ? true : false;
 const api = {
   invoke: <K extends AllowedChannel>(
     channel: K,
-    ...args: IsOptional<InvokeArgs<K>> extends true
-      ? [InvokeArgs<K>?]
-      : InvokeArgs<K> extends undefined
-        ? []
-        : [InvokeArgs<K>]
+    ...args: IsOptional<InvokeArgs<K>> extends true // Is the argument optional?
+      ? [InvokeArgs<K>?] // If so, wrap it in an array and make it optional
+      : InvokeArgs<K> extends undefined // Is the argument undefined?
+        ? [] // If so, pass an empty array
+        : [InvokeArgs<K>] // Otherwise, wrap it in an array
   ): Promise<Awaited<ReturnType<(typeof ipcMainListeners)[K]>>> => {
     return ipcRenderer.invoke(channel, ...args);
   },
