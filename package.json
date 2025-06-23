@@ -10,7 +10,7 @@
     "package": "npm run rebuild && npm exec electron-forge package",
     "premake": "npm run rebuild",
     "make": "npm exec electron-forge make",
-    "make:mac": "electron-forge make --platform=darwin --arch=universal",
+    "make:mac": "electron-forge make --platform=darwin",
     "make:win": "electron-forge make --platform=win32 --arch=x64",
     "rebuild": "electron-rebuild -f -w better-sqlite3",
     "publish": "electron-forge publish",
